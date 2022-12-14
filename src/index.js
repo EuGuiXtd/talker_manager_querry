@@ -88,3 +88,15 @@ async (req, res) => {
   await readTalker.writeTalkerFile(talker); 
   return res.status(200).json(updateTalker);
 });
+
+app.delete('/talker/:id',
+validaToken, 
+async (req, res) => {
+  const { id } = req.params;
+  const talker = await readTalker.getAllTalkers();
+  const arrayPosition = talker.findIndex((x) => x.id === Number(id));
+  talker.splice(arrayPosition, 1);
+
+  await readTalker.writeTalkerFile(talker);
+  return res.status(204).json(talker);
+});
