@@ -16,6 +16,11 @@ function geraStringAleatoria(tamanho) {
   return stringAleatoria;
 }
 
+function validateEmail(email) {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+}
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
@@ -37,10 +42,20 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(200).json(talker);
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => { 
   const newTalker = { ...req.body };
-  const talker = await readTalker.getAllTalkers();
-  talker.push(newTalker);
-
-  res.status(200).json({ token: geraStringAleatoria(16) });
+  const talker = await readTalker.getAllTalkers(); talker.push(newTalker);
+  if (!newTalker.email) { 
+    return res.status(400)
+  .json({ message: 'O campo "email" é obrigatório' }); 
+} if (validateEmail(newTalker.email) === false) {
+  return res.status(400)
+   .json({ message: 'O "email" deve ter o formato "email@email.com"' }); 
+ } if (!newTalker.password) {
+  return res.status(400)
+   .json({ message: 'O campo "password" é obrigatório' }); 
+ } if (newTalker.password.length < 6) {
+  return res.status(400)
+   .json({ message: 'O "password" deve ter pelo menos 6 caracteres' }); 
+ } return res.status(200).json({ token: geraStringAleatoria(16) });
 });
