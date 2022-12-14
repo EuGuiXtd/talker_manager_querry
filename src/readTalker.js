@@ -21,7 +21,13 @@ const getTalkerById = async (id) => {
     return talkers.find((talker) => talker.id === id);
 };
 
+const writeTalkerFile = async (content) => {
+    const path = './talker.json';
+    await fs.writeFile(join(__dirname, path), JSON.stringify(content, null, 2));
+  };
+
 module.exports = {
     getAllTalkers,
     getTalkerById,
+    writeTalkerFile,
 };
