@@ -65,3 +65,26 @@ app.post('/login', validaEmail, validaSenha, async (req, res) => {
   const talker = await readTalker.getAllTalkers(); talker.push(newTalker);
   return res.status(200).json({ token: geraStringAleatoria(16) });
 });
+
+app.put('/talker/:id',
+validaToken,
+validaNome,
+validaIdade,
+validaTalk,
+validawatchedAt,
+validaRate, 
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const { watchedAt, rate } = talk;
+
+  const talker = await readTalker.getAllTalkers();
+  const updateTalker = talker.find((x) => x.id === Number(id));
+
+  updateTalker.name = name;
+  updateTalker.age = age;
+  updateTalker.talk.watchedAt = watchedAt;
+  updateTalker.talk.rate = rate;
+  await readTalker.writeTalkerFile(talker); 
+  return res.status(200).json(updateTalker);
+});
