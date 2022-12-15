@@ -26,8 +26,15 @@ const writeTalkerFile = async (content) => {
     await fs.writeFile(join(__dirname, path), JSON.stringify(content, null, 2));
   };
 
+  const findTalkerByName = async (query) => {
+    const talkers = await readTalkerFile();
+    return talkers
+      .filter((talker) => talker.name.toLowerCase().includes(query.toLowerCase()));
+  };
+
 module.exports = {
     getAllTalkers,
     getTalkerById,
     writeTalkerFile,
+    findTalkerByName,
 };

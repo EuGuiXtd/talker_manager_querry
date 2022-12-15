@@ -33,6 +33,17 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+app.get('/talker/search',
+validaToken,  
+async (req, res) => {
+  const { q } = req.query;
+  const talker = await readTalker.findTalkerByName(q);
+  if (q === undefined) {
+    return res.status(200);
+  }
+  return res.status(talker.length === 0 ? 200 : 200).json(talker);
+});
+
 app.post('/talker', 
 validaToken, 
 validaNome,
